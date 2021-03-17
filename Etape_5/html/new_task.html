@@ -1,0 +1,36 @@
+<ons-page id="newTaskPage">
+
+  <ons-toolbar>
+    <div class="left">
+      <ons-back-button>À faire</ons-back-button>
+    </div>
+    <div class="center">Nouvelle tâche</div>
+    <div class="right">
+      <ons-if platform="android">
+        <ons-toolbar-button component="button/save-task">
+          <ons-icon icon="md-save"></ons-icon>
+        </ons-toolbar-button>
+      </ons-if>
+    </div>
+  </ons-toolbar>
+
+  <ons-list-title>Configurer ma tâche</ons-list-title>
+  <ons-list-item modifier="nodivider">
+    <div class="center">
+      <ons-input id="title-input" type="text" placeholder="Nom de la tâche*" float></ons-input>
+    </div>
+  </ons-list-item>
+  <ons-list-item modifier="nodivider">
+    <div class="center">
+      <ons-input id="descr-input" type="text" placeholder="Description" float></ons-input>
+    </div>
+  </ons-list-item>
+  <ons-list>
+    <ons-list-item expandable style="height: auto" >
+      Catégorie
+      <div class="expandable-content" id="categorie">
+      </div>
+    </ons-list-item>
+  </ons-list>
+
+</ons-page>
