@@ -30,10 +30,12 @@ myApp.controllers = {
 
       // Charger les catégories lors de la création d'une nouvelle tache
       var categorie = [];
-      myApp.services.fixtures.forEach( (elem) => {
-        if(!categorie.includes(elem.category) && elem.category !== '' ) {
-          categorie.push(elem.category);
-          page.querySelector('#categorie').innerHTML += `
+      var tabFix = JSON.parse(window.localStorage.getItem("ToDoList"));
+      if(tabFix) {
+        tabFix.forEach( (elem) => {
+          if(!categorie.includes(elem.category) && elem.category !== '' ) {
+            categorie.push(elem.category);
+            page.querySelector('#categorie').innerHTML += `
             <ons-list-item id="item-category" tappable>
                 <div class="center">
                     <p>${elem.category}</p>
@@ -43,8 +45,10 @@ myApp.controllers = {
                 </div>
             </ons-list-item>
           `;
-        }
-      })
+          }
+        });
+      }
+
 
     page.querySelector('#categorie').innerHTML += `
         <ons-list-item id="item-category" tappable>
@@ -77,21 +81,24 @@ myApp.controllers = {
       })
 
       if(titre) {
-        myApp.services.tasks.create({
+        var data = {
           title: titre,
           category: categorie,
           description: descr,
+          state: "pending",
           highlight: false,
-          urgent: false
-        });
-
-        document.querySelector('#myNavigator').popPage();
+          urgent: false,
+        };
+        if(myApp.services.localStor.itemExist(data)) {
+          ons.notification.alert("La tache existe déjà");
+        } else {
+          myApp.services.tasks.create(data);
+          document.querySelector('#myNavigator').popPage();
+        }
       } else {
         ons.notification.alert("Veuillez saisir un titre");
       }
-
     }
-
   }
 
 };

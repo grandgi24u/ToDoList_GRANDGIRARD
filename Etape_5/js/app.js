@@ -21,13 +21,3 @@ document.addEventListener('init', (event) => {
   }
 });
 
-window.onbeforeunload = () => {
-  myApp.services.localStor.save();
-}
-
-window.onclose = () => {
-  myApp.services.localStor.save();
-}
-
-
-
