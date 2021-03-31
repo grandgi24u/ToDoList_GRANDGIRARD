@@ -36,11 +36,13 @@ myApp.services = {
                 myApp.services.animators.swipe(taskItem, () => {
                     if (taskItem.data.state === "pending") {
                         taskItem.data.state = "current";
+                        myApp.services.localStor.changeState(taskItem.data, "current");
                         taskItem.querySelector('.left').innerHTML = '<ons-checkbox></ons-checkbox>';
                         var currentList = document.querySelector('#current-list');
                         currentList.insertBefore(taskItem, taskItem.data.urgent ? currentList.firstChild : null);
                     } else if (taskItem.data.state === "current") {
                         taskItem.data.state = "completed";
+                        myApp.services.localStor.changeState(taskItem.data, "completed");
                         taskItem.querySelector('ons-checkbox').checked = true;
                         taskItem.querySelector('ons-checkbox').disabled = true;
                         var completedList = document.querySelector('#completed-list');
@@ -53,6 +55,11 @@ myApp.services = {
                 myApp.services.animators.remove(taskItem, () => {
                     myApp.services.localStor.deleteItem(taskItem.data);
                 });
+            });
+
+            taskItem.addEventListener('click', () => {
+                myApp.controllers.detailsTaskPage();
+                document.querySelector('#myNavigator').pushPage('html/details_task.html');
             });
 
             // Insert urgent tasks at the top and non urgent tasks at the bottom.
@@ -88,6 +95,16 @@ myApp.services = {
                 return exist;
             }
             return false;
+        },
+
+        changeState: (data, state) => {
+            var tabFixtures = JSON.parse(window.localStorage.getItem("ToDoList"));
+            tabFixtures.forEach((elem) => {
+                if (elem.title === data.title) {
+                    elem.state = state;
+                }
+            });
+            window.localStorage.setItem("ToDoList", JSON.stringify(tabFixtures));
         },
 
         // save items in localStorage when app is close
