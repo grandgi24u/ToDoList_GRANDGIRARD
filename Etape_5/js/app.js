@@ -16,7 +16,7 @@ document.addEventListener('init', (event) => {
       && document.querySelector('#pendingTasksPage')
       && !document.querySelector('#pendingTasksPage ons-list-item')
     ) {
-      myApp.services.localStor.charge();
+      myApp.services.localStor.charge("pending");
     }
   }
 });

@@ -24,6 +24,18 @@ myApp.controllers = {
         page.querySelector('[component="button/del-task"]').addEventListener('click', () => {
             myApp.services.localStor.deleteAll();
         });
+
+        page.querySelector('#pending').onclick = () => {
+            myApp.services.localStor.charge("pending");
+        };
+
+        page.querySelector('#current').onclick = () => {
+            myApp.services.localStor.charge("current");
+        };
+
+        page.querySelector('#completed').onclick = () => {
+            myApp.services.localStor.charge("completed");
+        };
     },
 
     newTaskPage: (page) => {

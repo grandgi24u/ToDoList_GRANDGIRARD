@@ -69,6 +69,8 @@ myApp.services = {
             } else if (taskItem.data.state === "completed") {
                 var completedList = document.querySelector('#completed-list');
                 completedList.insertBefore(taskItem, taskItem.data.urgent ? completedList.firstChild : null);
+                taskItem.querySelector('ons-checkbox').checked = true;
+                taskItem.querySelector('ons-checkbox').disabled = true;
             } else {
                 var pendingList = document.querySelector('#pending-list');
                 pendingList.insertBefore(taskItem, taskItem.data.urgent ? pendingList.firstChild : null);
@@ -81,6 +83,9 @@ myApp.services = {
     // LocalStorage //
     //////////////////
     localStor: {
+
+        // item charger
+        chargeItem: [],
 
         // check if an item existe in localStorage
         itemExist: (data) => {
@@ -121,12 +126,15 @@ myApp.services = {
         },
 
         // charge items from localStorage when we open app
-        charge: () => {
+        charge: (page) => {
             var tabFixtures = JSON.parse(window.localStorage.getItem("ToDoList"));
             if (tabFixtures) {
                 tabFixtures.forEach((e) => {
-                    myApp.services.tasks.create(e);
+                    if(e.state === page && myApp.services.localStor.chargeItem.indexOf(e.state) === -1) {
+                        myApp.services.tasks.create(e);
+                    }
                 });
+                myApp.services.localStor.chargeItem.push(page);
             }
         },
 
