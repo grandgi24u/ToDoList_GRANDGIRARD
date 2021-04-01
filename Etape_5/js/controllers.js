@@ -61,7 +61,6 @@ myApp.controllers = {
             });
         }
 
-
         page.querySelector('#categorie').innerHTML += `
             <ons-list-item id="item-category" tappable>
                <div class="center">
@@ -114,16 +113,96 @@ myApp.controllers = {
     },
 
     detailsTaskPage: (page) => {
-        page.querySelector('#detailsTaskPage').innerHTML += `
+        var task = page.data;
+        page.querySelector('ons-list-title').innerText = task.title;
+        page.querySelector('#descr-input').value = task.description;
+
+        var categorie = [];
+        var tabFix = JSON.parse(window.localStorage.getItem("ToDoList"));
+        if (tabFix) {
+            tabFix.forEach((elem) => {
+                if (!categorie.includes(elem.category) && elem.category !== '') {
+                    categorie.push(elem.category);
+                    if(task.category === elem.category) {
+                        page.querySelector('#categorie').innerHTML += `
+                        <ons-list-item id="item-category" tappable>
+                            <div class="center">
+                                <p>${elem.category}</p>
+                            </div>
+                            <div class="right">
+                                <ons-radio name="categoryGroup" input-id="r-all ${elem.category}" checked></ons-radio>
+                            </div>
+                        </ons-list-item>
+                    `;
+                    }else{
+                        page.querySelector('#categorie').innerHTML += `
+                        <ons-list-item id="item-category" tappable>
+                            <div class="center">
+                                <p>${elem.category}</p>
+                            </div>
+                            <div class="right">
+                                <ons-radio name="categoryGroup" input-id="r-all ${elem.category}"></ons-radio>
+                            </div>
+                        </ons-list-item>
+                    `;
+                    }
+                }
+            });
+        }
+
+        if(task.category) {
+            page.querySelector('#categorie').innerHTML += `
             <ons-list-item id="item-category" tappable>
-                <div class="center">
+               <div class="center">
                     <ons-input id="category-input" type="text" placeholder="Nom de la categorie" float></ons-input>
-                </div>
-                <div class="right">
-                    <ons-radio name="categoryGroup" input-id="r-all new-Cat" checked></ons-radio>
-                </div>
+               </div>
+               <div class="right">
+                    <ons-radio name="categoryGroup" input-id="r-all new-Cat"></ons-radio> 
+               </div>
             </ons-list-item>
         `;
+        } else {
+            page.querySelector('#categorie').innerHTML += `
+            <ons-list-item id="item-category" tappable>
+               <div class="center">
+                    <ons-input id="category-input" type="text" placeholder="Nom de la categorie" float></ons-input>
+               </div>
+               <div class="right">
+                    <ons-radio name="categoryGroup" input-id="r-all new-Cat" checked></ons-radio> 
+               </div>
+            </ons-list-item>
+        `;
+        }
+
+        page.querySelector('[component="button/save-task"]').onclick = () => {
+
+            var descr = document.getElementById("descr-input").value;
+
+            var categorie = "";
+            var radio = document.getElementsByName("categoryGroup");
+
+            radio.forEach((e) => {
+                if (e.checked) {
+                    if (e.id.substr(6) === "new-Cat") {
+                        categorie = document.getElementById("category-input").value;
+                    } else {
+                        categorie = e.id.substr(6);
+                    }
+                }
+            })
+
+            var data = {
+                    category: categorie,
+                    description: descr,
+                    state: task.state,
+            };
+
+            myApp.services.localStor.changeItemValues(task.title,data);
+            document.querySelector('#myNavigator').popPage();
+        }
+
+
+
     }
 
 };

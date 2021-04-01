@@ -57,9 +57,8 @@ myApp.services = {
                 });
             });
 
-            taskItem.addEventListener('click', () => {
-                myApp.controllers.detailsTaskPage();
-                document.querySelector('#myNavigator').pushPage('html/details_task.html');
+            taskItem.querySelector('.center').addEventListener('click', () => {
+                document.querySelector('#myNavigator').pushPage('html/details_task.html', {data: taskItem.data});
             });
 
             // Insert urgent tasks at the top and non urgent tasks at the bottom.
@@ -86,6 +85,18 @@ myApp.services = {
 
         // item charger
         chargeItem: [],
+
+        // change an item
+        changeItemValues: (title, data) => {
+            var tabFixtures = JSON.parse(window.localStorage.getItem("ToDoList"));
+            tabFixtures.forEach((elem) => {
+                if (elem.title === title) {
+                    elem.description = data.description;
+                    elem.category = data.category;
+                }
+            });
+            window.localStorage.setItem("ToDoList", JSON.stringify(tabFixtures));
+        },
 
         // check if an item existe in localStorage
         itemExist: (data) => {
